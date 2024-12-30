@@ -5,37 +5,36 @@ pipeline {
         stage('SCM Checkout') {
             steps {
                 retry(3) {
-                    git branch: 'main', url: 'https://github.com/ThejaniPerera/test1.git'
+                    git branch: 'main', url: 'https://github.com/ThejaniPerera/msc_project.git'
                 }
             }
         }
         
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t thejaniperera/nodeapp-cuban:latest .'
+                bat 'docker build -t thejaniperera/contactapp-cuban:latest .'
             }
         }
-
-        stage('Docker Login') {
+       stage('Docker Login') {
             steps {
-                withCredentials([string(credentialsId: 'test-dockerhubpassword', variable: 'test-dockerhubpass')]) {
-                    script {
-                        bat "docker login -u thejaniperera -p %test-dockerhubpass%"
+               withCredentials([string(credentialsId: 'contactAppweb', variable: 'contactApp')]) {
+                   script {
+                        bat "docker login -u thejaniperera -p %contactApp%"
                     }
-                }
+    // some block
+}
             }
-        }
+        } 
         stage('Push Image') {
     steps {
-        bat 'docker push thejaniperera/nodeapp-cuban:latest'
+        bat 'docker push thejaniperera/contactapp-cuban:latest'
     }
 }
-
     }
-     post {
+    post {
         always {
+            
             bat 'docker logout'
         }
     }
-    }     
-
+}
